@@ -1,4 +1,5 @@
 const fs = require('fs');
+const cp = require("child_process");
 const { exit } = require('process');
 
 // 2022年的第一个match id 开始 示例 match.json
@@ -14,16 +15,15 @@ let config = {
 
 // 下载
 const down = (url, target_dir) => {
-  var cp = require("child_process");
-  cp.exec(`wget -nv --content-disposition -P ${target_dir} ${url}`, function(err, stdout, stderr) {
+  let link = "wget -nv --content-disposition -P " + target_dir + " " + url
+  // console.log(link)
+  cp.execSync(link, function(err, stdout, stderr) {
       if (err) {
           console.error(err)
-          return false
+          console.log('error')
       }
 
       console.log(stdout, stderr)
-
-      return true
   });
 }
 
@@ -66,11 +66,15 @@ const worker = async () => {
   console.log("当前设置\n", config.target_dir, config.start, config.end, config.note)
 
   config.matches.forEach(match => {
-    if (!match.done) {
-      console.log(match.id-config.start, '/', config.end-config.start)
-      down(match.url, config.target_dir + "/Matches" + match.event_name.replace(' ', '-'))
+    if (match.done===false) {
+      console.log(match.id, match.id-config.start, '/', config.end-config.start, match.event_name, "| url:", match.link)
+      down(match.link, config.target_dir + "/Matches/" + match.event_name.replaceAll(' ', '-') )
+
+      match.done = true
     }
   });
+
+  writeSetting()
 }
 
 worker()

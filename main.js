@@ -57,7 +57,7 @@ const getMatchInfo = async (id) => {
 // 下载
 const down = (url, target_dir) => {
   var cp = require("child_process");
-  cp.exec(`wget --content-disposition -P ${target_dir} ${url}`, function(err, stdout, stderr) {
+  cp.execSync("wget --content-disposition -P " + target_dir + "Matches " + url, function(err, stdout, stderr) {
       if (err) {
           console.error(err);
       }
@@ -108,6 +108,8 @@ const worker = async () => {
   for(var i = config.current? config.current+1 : config.start; i <= config.end ; i++) {
     await getMatchInfo(i)
   }
+
+  writeSetting()
 }
 
 worker()
