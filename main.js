@@ -111,3 +111,5 @@ const worker = async () => {
 }
 
 worker()
+
+exit(0)
