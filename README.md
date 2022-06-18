@@ -43,6 +43,8 @@ yarn -v
 
 ## 调整设置
 
+下载源代码 https://github.com/Purple-CSGO/CSGO-Demo-Batch/archive/refs/heads/master.zip
+
 打开 `main.js`，修改 `config` 的数值
 
 - target_dir: 录像下载目录
@@ -76,6 +78,14 @@ let config = {
 
 > 仅示意
 
+### 安装依赖
+
+切换到项目根目录
+
+```bash
+yarn install
+```
+
 ### 下载元数据
 
 切换到项目根目录，使用如下命令，最好一次性完成
@@ -99,3 +109,7 @@ node ./download.js
 ### 多组配置注意事项
 
 建议为每组下载的配置设置单独的文件夹，每次重新配置前务必删除 `./MatchConfig/config.json`
+
+## 下载效果预览
+
+![预览效果](.\preview.png)
