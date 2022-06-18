@@ -4,7 +4,7 @@ const { exit } = require('process');
 
 // 2022年的第一个match id 开始 示例 match.json
 let config = {
-  target_dir: ".",
+  target_dir: "./Matches",
   start: "2353897", // 1月2日
   end: "2356303", // 6月6日 IEM Dallas 决赛 C9 > ENCE
   current: "",
@@ -72,7 +72,7 @@ const worker = async () => {
   config.matches.forEach((match, index, arr) => {
     if (match.done===false) {
       console.log(match.id, match.id-config.start, '/', config.end-config.start, match.event_name, "| url:", match.link)
-      down(match.link, config.target_dir + "/Matches/" + match.event_name.replaceAll(' ', '-') )
+      down(match.link, config.target_dir + "/" + match.event_name.replaceAll(' ', '-') )
 
       config.matches[index].done = true
     }

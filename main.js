@@ -1,11 +1,11 @@
 const { HLTV } = require('hltv')
 const fs = require('fs')
 
-// 2022年的第一个match id 开始 示例 match.json
+// 设置
 let config = {
-  target_dir: ".",
-  start: "2353897", // 1月2日
-  end: "2356303", // 6月6日 IEM Dallas 决赛 C9 > ENCE
+  target_dir: "./Matches",
+  start: "2353897",
+  end: "2356303",
   current: "",
   matches: [],
   // events: [],
@@ -52,19 +52,6 @@ const getMatchInfo = async (id) => {
 
   // 打印信息
   console.log(match.id, config.current - config.start, '/', config.end - config.start, match.event_name)
-}
-
-// 下载
-const down = (url, target_dir) => {
-  var cp = require("child_process");
-  cp.execSync("wget --content-disposition -P " + target_dir + "Matches " + url, function(err, stdout, stderr) {
-      if (err) {
-          console.error(err);
-      }
-
-      console.log("stdout:",stdout);
-      console.log("stderr:",stderr);
-  });
 }
 
 // 读取设置
