@@ -15,7 +15,11 @@ let config = {
 
 // 下载
 const down = (url, target_dir) => {
-  let link = "wget -nv --content-disposition -P " + target_dir + " " + url
+  if (url === "") {
+    console.log("skip")
+    return
+  }
+  let link = "wget -nv -N --content-disposition -P " + target_dir + " " + url
   // console.log(link)
   cp.execSync(link, function(err, stdout, stderr) {
       if (err) {
@@ -65,12 +69,12 @@ const worker = async () => {
 
   console.log("当前设置\n", config.target_dir, config.start, config.end, config.note)
 
-  config.matches.forEach(match => {
+  config.matches.forEach((match, index, arr) => {
     if (match.done===false) {
       console.log(match.id, match.id-config.start, '/', config.end-config.start, match.event_name, "| url:", match.link)
       down(match.link, config.target_dir + "/Matches/" + match.event_name.replaceAll(' ', '-') )
 
-      match.done = true
+      config.matches[index].done = true
     }
   });
 
