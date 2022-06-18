@@ -112,4 +112,4 @@ node ./download.js
 
 ## 下载效果预览
 
-![预览效果](.\preview.png)
+![预览效果](./preview.png)
