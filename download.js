@@ -4,13 +4,13 @@ const { exit } = require('process');
 
 // 2022年的第一个match id 开始 示例 match.json
 let config = {
+  note: "1月2日 ~ 6月6日 IEM Dallas 决赛 C9 > ENCE",
   target_dir: "./Matches",
   start: "2353897", // 1月2日
   end: "2356303", // 6月6日 IEM Dallas 决赛 C9 > ENCE
   current: "",
   matches: [],
   // events: [],
-  note: "1月2日 ~ 6月6日 IEM Dallas 决赛 C9 > ENCE"
 }
 
 // 下载
@@ -54,6 +54,7 @@ const _strMapToObj = (strMap) => {
 
 // 保存设置
 const writeSetting = () => {
+  // console.log('hello save')
   let data = JSON.stringify(config)
   fs.writeFileSync("./MatchConfig/config.json", data)
 
@@ -65,16 +66,22 @@ const writeSetting = () => {
 const worker = async () => {
   readSetting()
 
-  setInterval(writeSetting, 60000) // 1min保存一次
-
   console.log("当前设置\n", config.target_dir, config.start, config.end, config.note)
 
+  let counter = 0
   config.matches.forEach((match, index, arr) => {
     if (match.done===false) {
       console.log(match.id, match.id-config.start, '/', config.end-config.start, match.event_name, "| url:", match.link)
       down(match.link, config.target_dir + "/" + match.event_name.replaceAll(' ', '-') )
 
       config.matches[index].done = true
+    }
+    
+    // 保存
+    counter++
+    if (counter % 4 == 0) {
+      writeSetting()
+      counter = 0
     }
   });
 

@@ -3,13 +3,13 @@ const fs = require('fs')
 
 // 设置
 let config = {
+  note: "1月2日 ~ 6月6日 IEM Dallas 决赛 C9 > ENCE",
   target_dir: "./Matches",
   start: "2353897",
   end: "2356303",
   current: "",
   matches: [],
   // events: [],
-  note: "1月2日 ~ 6月6日 IEM Dallas 决赛 C9 > ENCE"
 }
 
 // 事件
@@ -88,12 +88,20 @@ const writeSetting = () => {
 const worker = async () => {
   readSetting()
 
-  setInterval(writeSetting, 60000) // 1min保存一次
+  // setInterval(writeSetting, 60000) // 1min保存一次
 
   console.log("当前设置\n", config.target_dir, config.start, config.end, config.note)
 
+  let counter = 0
   for(var i = config.current? config.current+1 : config.start; i <= config.end ; i++) {
     await getMatchInfo(i)
+
+    // 保存
+    counter++
+    if (counter % 60 == 0) {
+      writeSetting()
+      counter = 0
+    }
   }
 
   writeSetting()
