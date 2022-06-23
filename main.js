@@ -1,12 +1,13 @@
 const { HLTV } = require('hltv')
 const fs = require('fs')
+const { exit } = require('process');
 
 // 设置
 let config = {
-  note: "1月2日 ~ 6月6日 IEM Dallas 决赛 C9 > ENCE",
+  note: "1月2日 ~ 3月31日",
   target_dir: "./Matches",
   start: "2353897",
-  end: "2356303",
+  end: "2355496",
   current: "",
   matches: [],
   // events: [],

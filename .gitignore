@@ -1,5 +1,5 @@
-MatchConfig/
-MatchData/
-Matches/
+MatchConfig/*
+MatchData/*
+Matches/*
 
 node_modules

@@ -4,11 +4,12 @@ const { exit } = require('process');
 
 // 2022年的第一个match id 开始 示例 match.json
 let config = {
-  note: "1月2日 ~ 6月6日 IEM Dallas 决赛 C9 > ENCE",
+  note: "1月2日 ~ 3月31日",
   target_dir: "./Matches",
   start: "2353897", // 1月2日
-  end: "2356303", // 6月6日 IEM Dallas 决赛 C9 > ENCE
+  end: "2355496", // 6月6日 IEM Dallas 决赛 C9 > ENCE
   current: "",
+  proxy: "", // -e \"http_proxy=127.0.0.1:7890\"
   matches: [],
   // events: [],
 }
@@ -19,7 +20,7 @@ const down = (url, target_dir) => {
     console.log("skip")
     return
   }
-  let link = "wget -nv -N --content-disposition -P " + target_dir + " " + url
+  let link = "wget -nv -c -N --content-disposition --no-check-certificate -P " + target_dir + " " + url
   // console.log(link)
   cp.execSync(link, function(err, stdout, stderr) {
       if (err) {
