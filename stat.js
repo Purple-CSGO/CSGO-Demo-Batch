@@ -1,6 +1,8 @@
 const { HLTV } = require('hltv')
 const fs = require('fs')
 
+const {sleep} = require('./util.js')
+
 // 设置
 let config = {
   note: "7月6日~7月27日",
@@ -13,7 +15,7 @@ let config = {
 }
 
 // 事件
-let events = new Map()
+// let events = new Map()
 
 const getMatchInfo = async (id) => {
   let match = {
@@ -42,8 +44,8 @@ const getMatchInfo = async (id) => {
   
   // 转换成json字符串
   let res = JSON.stringify(resp)
-
-  // 写入文件
+  
+    // 写入文件
   fs.writeFileSync("./MatchData/"+id+".json", res)
 
   // 加入比赛信息
@@ -60,36 +62,35 @@ const readSetting = () => {
     let data = fs.readFileSync("./MatchConfig/config.json")
     config = JSON.parse(data)
   }
-
-  // if (fs.existsSync("./MatchConfig/events.json")) {
-  //   let data = fs.readFileSync("./MatchConfig/events.json")
-  //   events = JSON.parse(data)
-  // }
 }
 
-const _strMapToObj = (strMap) => {
-  let obj= Object.create(null);
-  for (let[k,v] of strMap) {
-    obj[k] = v;
-  }
-  return obj;
+// id不断减小，>min，获取比赛信息，同时
+const matches = async () => {
+
 }
 
-// 保存设置
-const writeSetting = () => {
-  let data = JSON.stringify(config)
-  fs.writeFileSync("./MatchConfig/config.json", data)
+// 赛事包含哪些比赛
+const matchOfEvents = async () => {
 
-  let ev = JSON.stringify(_strMapToObj(events))
-  fs.writeFileSync("./MatchConfig/events.json", ev)
 }
+
+// 赛事信息
+const events = async () => {
+}
+
 
 // 搬砖主函数
 const worker = async () => {
+  // 建立文件夹
+  if (fs.existsSync("./matches")===false)
+    fs.mkdirSync("./matches")
+  
+  if (fs.existsSync("./events")===false)
+    fs.mkdirSync("./events")
+
+  HLTV.getEvent(6637).then((resp)=>{console.log(resp)})
+
   readSetting()
-
-  // setInterval(writeSetting, 60000) // 1min保存一次
-
   console.log("当前设置\n", config.target_dir, config.start, config.end, config.note)
 
   let counter = 0
@@ -107,5 +108,14 @@ const worker = async () => {
   writeSetting()
 }
 
-worker()
+// worker()
+
+// HLTV.getEvent({id:6637}).then((resp)=>{console.log(resp)})
+
+// Error: Access denied | www.hltv.org used Cloudflare to restrict access
+// HLTV.getMatchesStats({ startDate: '2022-07-10', endDate: '2022-07-18', delayBetweenPageRequests: 1500 }).then((res) => {
+//   console.log(res)
+// })
+
+sleep(5000);
 

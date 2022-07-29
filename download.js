@@ -20,8 +20,8 @@ const down = (url, target_dir) => {
     console.log("skip")
     return
   }
-  let link = "wget -nv -c -N --content-disposition --no-check-certificate -P " + target_dir + " " + url
-  // console.log(link)
+  let link = "wget -nv -c -N --content-disposition --no-check-certificate -e \"https_proxy=http://127.0.0.1:7890\" -P " + target_dir + " " + url
+  console.log(link)
   cp.execSync(link, function(err, stdout, stderr) {
       if (err) {
           console.error(err)
