@@ -4,6 +4,14 @@ const sleep = (timeountMS) => new Promise((resolve) => {
   setTimeout(resolve, timeountMS);
 });
 
+// 读取设置
+const readSetting = () => {
+  if (fs.existsSync("./MatchConfig/config.json")) {
+    let data = fs.readFileSync("./MatchConfig/config.json")
+    config = JSON.parse(data)
+  }
+}
+
 // 保存设置
 const writeSetting = () => {
   let data = JSON.stringify(config)

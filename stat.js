@@ -56,26 +56,21 @@ const getMatchInfo = async (id) => {
   console.log(match.id, config.current - config.start, '/', config.end - config.start, match.event_name)
 }
 
-// 读取设置
-const readSetting = () => {
-  if (fs.existsSync("./MatchConfig/config.json")) {
-    let data = fs.readFileSync("./MatchConfig/config.json")
-    config = JSON.parse(data)
-  }
-}
 
 // id不断减小，>min，获取比赛信息，同时
 const matches = async () => {
-
+  // 获取比赛信息 每个ID保存相应的json文件
 }
 
-// 赛事包含哪些比赛
+// 赛事包含哪些比赛 id 和赛事名称对应 方便筛选
 const matchOfEvents = async () => {
 
 }
 
-// 赛事信息
+// 赛事信息 
 const events = async () => {
+  // 比赛信息获取完成之后，根据matchOfEvents去单独获取 event 详细信息
+  // 每个 ID 保存相应的 json 文件
 }
 
 
