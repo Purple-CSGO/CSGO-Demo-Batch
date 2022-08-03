@@ -1,8 +1,8 @@
-const {getMatchData, getEventData, map2file, readCFG, writeCFG} = require('./util.js')
+const {getMatchData, map2file, readCFG, writeCFG} = require('./util.js')
 const path = require('path')
 
 let cfg = {
-  note: "",
+  note: "比赛 2012~2022.8.3",
   wd: ".",
   start: 2146342,
   end: 2357516,
@@ -24,7 +24,7 @@ const getMatches = async (cfg) => {
 
       cfg.current = id
       counter = 0
-      writeCFG(cfg, cfg.wd, 'config.json')
+      writeCFG(cfg, cfg.wd, 'cfg_match.json')
     }
 
     // 获取数据
@@ -43,37 +43,19 @@ const getMatches = async (cfg) => {
 
     console.log(id, id - cfg.start, '/', cfg.end - cfg.start, '👌')
   }
-
-  // let id = 2357507
-
-  return cfg
-}
-
-// 获取赛事数据
-const getEvents = async () => {
-  // 设定路径
-  const dirEvent = path.join(cfg.wd, 'events')
-  const dirEventRaw = path.join(cfg.wd, 'events_raw')
-  // const dirEventLogo = path.join(cfg.wd, 'events_logo')
   
-  let id = 6337
-  const resp = await getEventData(id)
-  console.log(resp.data)
-
-  map2file(resp.data, dirEvent, id+'.json')
-  map2file(resp.raw, dirEventRaw, id+'.json')
+  return cfg
 }
 
 // 入口函数
 const main = async () => {
-  cfg = readCFG(cfg, cfg.wd, 'config.json')
+  cfg = readCFG(cfg, cfg.wd, 'cfg_match.json')
 
-  await getMatches(cfg)
-  // await getEvents(cfg)
+  cfg = await getMatches(cfg)
+
+  writeCFG(cfg, cfg.wd, 'cfg_match.json')
 
   console.log('end')
-
-  writeCFG(cfg, cfg.wd, 'config.json')
 }
 
 main()

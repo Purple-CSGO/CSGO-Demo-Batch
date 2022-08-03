@@ -10,12 +10,15 @@
 
 ### 比赛id
 
-- 最早csgo比赛id 2146342 | nip-vs-e-srael-steelseries-go-2012
+- 最早：2146342 | nip-vs-e-srael-steelseries-go-2012
 
-- 最新8.4 3:00am 比赛id 2357516 | eternal-fire-academy-vs-fnatic-rising-weplay-academy-league-season-5
+- 最新：2357516 | eternal-fire-academy-vs-fnatic-rising-weplay-academy-league-season-5（8.4 3am）
 
 ### 赛事id
 
 - 最早：939
 
-- 当前最新：6705 | 有的更小的id还没开始的
+- 最新：6705 | 有的更小的id还没开始的（8.4 3am）
+
+## 使用方法
+
