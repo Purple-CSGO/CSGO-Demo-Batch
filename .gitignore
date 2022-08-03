@@ -1,6 +1,7 @@
 MatchConfig/*
 MatchData/*
 Matches/*
+data/*
 
 node_modules
 
