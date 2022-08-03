@@ -6,6 +6,8 @@ const sleep = (timeountMS) => new Promise((resolve) => {
 
 // 读取设置
 const readSetting = () => {
+  const fs = require('fs')
+
   if (fs.existsSync("./MatchConfig/config.json")) {
     let data = fs.readFileSync("./MatchConfig/config.json")
     config = JSON.parse(data)
@@ -14,6 +16,8 @@ const readSetting = () => {
 
 // 保存设置
 const writeSetting = () => {
+  const fs = require('fs')
+
   let data = JSON.stringify(config)
   fs.writeFileSync("./MatchConfig/config.json", data)
 
@@ -30,27 +34,38 @@ const _strMapToObj = (strMap) => {
   return obj;
 }
 
+// map解析json并保存文件
+const map2file = (obj, dir, filename) => {
+  const fs = require('fs')
+  const path = require('path')
+
+  // 检查并生成目录
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
+
+  // 解析json并写入文件
+  fs.writeFileSync(path.join(dir, filename), JSON.stringify(obj))
+}
+
 // 通过原始链接获取实际下载链接
-const getDownloadUrl = (url) => {
+const getDownloadUrl = async (url) => {
   var cmd = `wget -nv -N --spider --content-disposition ${url}`
 
   const cp = require("child_process")
-  cp.exec(cmd, (err, stdout, stderr) => {
-    if (err) {
-      console.error(err)
-    }
+  return await new Promise((resolve, reject) => {
+    cp.exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        reject(err)
+      }
     
-    const downloadUrl = parseDownloadUrl(stderr)
-    console.log(downloadUrl)
-
-    return downloadUrl
+      resolve(parseDownloadUrl(stderr))
+    })
   })
-
 }
 
 // 从 wget 输出中提取 demo 实际的下载链接
 const parseDownloadUrl = (str) => {
-  console.log('parse.str: ', str)
   var re = /https:\/\/demos\.hltv\.org\S+/g
   var res = str.match(re)
 
@@ -59,12 +74,63 @@ const parseDownloadUrl = (str) => {
 
 // 从下载链接获取文件名
 const parseFileName = (str) => {
-  var re = /\/([^/]+$)/g
+  var re = /\/([^/]+$)/
   var res = str.match(re)
+  
+  return res !== null && res.length >= 1 ? res[1]: ''
+}
 
-  return res.length === 1 ? res[0]: ''
+// 获取比赛数据
+const getMatchData = async (id) => {
+  let match = {
+    name: '',
+    id: '',
+    download_id: '',
+    download_url: '',
+    filename: '',
+    event_id: 0,
+  }
+  var url = ''
+
+  const { HLTV } = require('hltv')
+  const resp = await HLTV.getMatch({id: id, delayBetweenPageRequests: 150 })
+  
+  match.id = resp.id
+  match.event_id = resp.event.id
+
+  // 获取下载链接
+  for (var i of resp.demos) {
+    if (i.name === "GOTV Demo") {
+      url = "https://www.hltv.org" + i.link
+      break
+    }
+  }
+
+  // 获取下载链接和url
+  if (url !== '') {
+    match.download_url = await getDownloadUrl(url)
+    match.filename = parseFileName(match.download_url)
+    match.download_id = Number(parseFileName(url))
+  }
+
+  return {data: match, raw: resp}
+}
+
+const getEventData = async (id) => {
+  const { HLTV } = require('hltv')
+  const resp = await HLTV.getEvent({id: id})
+
+  let event = {
+    id: id,
+    name: resp.name,
+    logo_url: resp.logo,
+  }
+  
+  return {data: event, raw: resp}
 }
 
 module.exports= {
-  sleep, getDownloadUrl, parseDownloadUrl, parseFileName
+  sleep, map2file,
+  getDownloadUrl, parseDownloadUrl, parseFileName,
+  getMatchData, getEventData
 }

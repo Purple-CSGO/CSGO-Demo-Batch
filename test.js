@@ -1,31 +1,52 @@
-const { HLTV } = require('hltv')
-const fs = require('fs')
-const { request } = require('http')
-
-const {getDownloadUrl, parseFileName} = require('./util.js')
+const {getMatchData, getEventData, map2file} = require('./util.js')
+const path = require('path')
 
 const cfg = {
-  path: "./data",
+  wd: ".",
   url: "http://www.hltv.org/download/demo/73220",
 }
 
+const getMatches = async () => {
+  // 设定路径
+  const dirMatch = path.join(cfg.wd, 'matches')
+  const dirMatchRaw = path.join(cfg.wd, 'matches_raw')
+
+  try {
+    let id = 2377507
+    const resp = await getMatchData(id)
+  
+    map2file(resp.data, dirMatch, id+'.json')
+    map2file(resp.raw, dirMatchRaw, id+'.json')
+    
+  } catch (error) {
+    
+  }
+}
+
+const getEvents = async () => {
+  // 设定路径
+  const dirEvent = path.join(cfg.wd, 'events')
+  const dirEventRaw = path.join(cfg.wd, 'events_raw')
+  // const dirEventLogo = path.join(cfg.wd, 'events_logo')
+
+  try {
+    let id = 6337
+    const resp = await getEventData(id)
+
+    map2file(resp.data, dirEvent, id+'.json')
+    map2file(resp.raw, dirEventRaw, id+'.json')
+
+  } catch (error) {
+  
+  }
+}
+
+// 入口函数
 const main = async () => {
-  // const resp = await HLTV.getMatch({id: 2357507, delayBetweenPageRequests: 250 })
-  // // const resp = await HLTV.getEvent({id: 6637})
-  
-  // let val = JSON.stringify(resp)
-  // console.log(val)
+  await getMatches()
+  await getEvents()
 
-  // if (!fs.existsSync(cfg.path)) fs.mkdirSync(cfg.path)
-  // fs.writeFileSync(cfg.path+"/test.json", val)
-
-  // const resp = await request(cfg.url)
-  
-  // console.log(resp)
-
-  const url = getDownloadUrl("https://www.hltv.org/download/demo/73220")
-  console.log('url: ', url)
-  console.log(parseFileName(url))
+  console.log('end')
 }
 
 main()

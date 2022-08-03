@@ -2,6 +2,11 @@ MatchConfig/*
 MatchData/*
 Matches/*
 data/*
+events/*
+events_raw/*
+events_logo/*
+matches/*
+matches_raw/*
 
 node_modules
 
