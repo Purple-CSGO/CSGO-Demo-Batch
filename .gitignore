@@ -7,6 +7,11 @@ events_raw/*
 events_logo/*
 matches/*
 matches_raw/*
+build/*
+dist/*
+config.json
+cfg_match.json
+cfg_event.json
 
 node_modules
 

@@ -1,28 +1,29 @@
+const fs = require('fs')
+const path = require('path')
 
 // 异步sleep
 const sleep = (timeountMS) => new Promise((resolve) => {
   setTimeout(resolve, timeountMS);
 });
 
-// 读取设置
-const readSetting = () => {
-  const fs = require('fs')
-
-  if (fs.existsSync("./MatchConfig/config.json")) {
-    let data = fs.readFileSync("./MatchConfig/config.json")
-    config = JSON.parse(data)
-  }
+// 从下载链接获取文件名 || 路径最后元素
+const parseFileName = (str) => {
+  var re = /\/([^/]+$)/
+  var res = str.match(re)
+  
+  return res !== null && res.length >= 1 ? res[1]: ''
 }
 
-// 保存设置
-const writeSetting = () => {
-  const fs = require('fs')
+// map解析json并保存文件
+const map2file = (obj, dir, filename, space = 0) => {
+  // 检查并生成目录
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
 
-  let data = JSON.stringify(config)
-  fs.writeFileSync("./MatchConfig/config.json", data)
-
-  let ev = JSON.stringify(_strMapToObj(events))
-  fs.writeFileSync("./MatchConfig/events.json", ev)
+  // 解析json并写入文件
+  jsonData = space !== 0? JSON.stringify(obj, null, space): JSON.stringify(obj)
+  fs.writeFileSync(path.join(dir, filename), jsonData)
 }
 
 // 字典->object
@@ -34,19 +35,33 @@ const _strMapToObj = (strMap) => {
   return obj;
 }
 
-// map解析json并保存文件
-const map2file = (obj, dir, filename) => {
-  const fs = require('fs')
-  const path = require('path')
 
-  // 检查并生成目录
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
-  }
+// ================= 设置读写 ==================
 
-  // 解析json并写入文件
-  fs.writeFileSync(path.join(dir, filename), JSON.stringify(obj))
+// 读设置
+const readCFG = (cfg, wd = '.', filename = 'config.json') => {
+  // 文件不存在
+  var file = path.join(wd, filename)
+  if (!fs.existsSync(file)) return cfg
+
+  // 读取设置文件
+  const resp = fs.readFileSync(file)
+  var temp = JSON.parse(resp)
+
+  // 读取异常
+  if (temp === null||temp === undefined||temp.wd === "")
+    return cfg
+
+  return temp
 }
+
+// 写设置
+const writeCFG = (cfg, wd = '.', filename = 'config.json') => {
+  map2file(cfg, wd, filename, 2)
+}
+
+
+// ================= 业务相关 ==================
 
 // 通过原始链接获取实际下载链接
 const getDownloadUrl = async (url) => {
@@ -72,18 +87,10 @@ const parseDownloadUrl = (str) => {
   return res.length === 1 ? res[0]: ''
 }
 
-// 从下载链接获取文件名
-const parseFileName = (str) => {
-  var re = /\/([^/]+$)/
-  var res = str.match(re)
-  
-  return res !== null && res.length >= 1 ? res[1]: ''
-}
-
 // 获取比赛数据
 const getMatchData = async (id) => {
   let match = {
-    name: '',
+    // name: '',
     id: '',
     download_id: '',
     download_url: '',
@@ -93,8 +100,10 @@ const getMatchData = async (id) => {
   var url = ''
 
   const { HLTV } = require('hltv')
-  const resp = await HLTV.getMatch({id: id, delayBetweenPageRequests: 150 })
-  
+  const resp = await HLTV.getMatch({id: id, delayBetweenPageRequests: 100 }).catch(err => {}) //console.log(id, '❌')
+
+  if (resp === null||resp === undefined) return null
+
   match.id = resp.id
   match.event_id = resp.event.id
 
@@ -125,12 +134,13 @@ const getEventData = async (id) => {
     name: resp.name,
     logo_url: resp.logo,
   }
-  
+
   return {data: event, raw: resp}
 }
 
 module.exports= {
   sleep, map2file,
+  readCFG, writeCFG,
   getDownloadUrl, parseDownloadUrl, parseFileName,
   getMatchData, getEventData
 }
