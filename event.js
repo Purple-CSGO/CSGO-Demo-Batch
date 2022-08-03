@@ -2,12 +2,15 @@ const {getEventData, map2file, readCFG, writeCFG} = require('./util.js')
 const path = require('path')
 
 let cfg = {
-  note: "比赛 2012~2022.8.3",
+  note: "赛事 2012~2022.8.3",
   wd: ".",
   start: 939,
   end: 6705,
   current: 939
 }
+
+// 传入命令行参数 wd 工作路径
+if (process.argv[2] !== null || process.argv[2] !== undefined) cfg.wd = process.argv[2]
 
 // 获取赛事数据
 const getEvents = async () => {

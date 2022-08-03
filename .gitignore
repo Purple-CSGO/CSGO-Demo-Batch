@@ -9,9 +9,9 @@ matches/*
 matches_raw/*
 build/*
 dist/*
-config.json
-cfg_match.json
-cfg_event.json
+# config.json
+# cfg_match.json
+# cfg_event.json
 
 node_modules
 

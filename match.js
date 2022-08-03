@@ -9,6 +9,9 @@ let cfg = {
   current: 2146342
 }
 
+// 传入命令行参数 wd 工作路径
+if (process.argv[2] !== null || process.argv[2] !== undefined) cfg.wd = process.argv[2]
+
 // 获取比赛数据
 const getMatches = async (cfg) => {
   // 设定路径
