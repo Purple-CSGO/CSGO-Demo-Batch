@@ -65,7 +65,7 @@ const writeCFG = (cfg, wd = '.', filename = 'config.json') => {
 
 // 通过原始链接获取实际下载链接
 const getDownloadUrl = async (url) => {
-  var cmd = `wget -nv -N --spider --content-disposition ${url}`
+  var cmd = `wget -nv -N --spider --no-check-certificate --content-disposition ${url}`
 
   const cp = require("child_process")
   return await new Promise((resolve, reject) => {
@@ -84,7 +84,7 @@ const parseDownloadUrl = (str) => {
   var re = /https:\/\/demos\.hltv\.org\S+/g
   var res = str.match(re)
 
-  return res.length === 1 ? res[0]: ''
+  return res !== null && res.length === 1 ? res[0]: ''
 }
 
 // 获取比赛数据
@@ -127,7 +127,9 @@ const getMatchData = async (id) => {
 
 const getEventData = async (id) => {
   const { HLTV } = require('hltv')
-  const resp = await HLTV.getEvent({id: id})
+  const resp = await HLTV.getEvent({id: id}).catch(err => {}) //console.log(id, '❌')
+
+  if (resp === null||resp === undefined) return null
 
   let event = {
     id: id,
