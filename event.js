@@ -1,5 +1,6 @@
 const {getEventData, map2file, readCFG, writeCFG} = require('./util.js')
 const path = require('path')
+const fs = require('fs')
 
 let cfg = {
   note: "赛事 2012~2022.8.3",
@@ -29,6 +30,11 @@ const getEvents = async () => {
       cfg.current = id
       counter = 0
       writeCFG(cfg, cfg.wd, 'cfg_event.json')
+    }
+    
+    if (fs.existsSync(path.join(dirEvent, id+'.json'))) {
+      console.log(id, id - cfg.start, '/', cfg.end - cfg.start, '✔️')
+      continue
     }
 
     // 获取数据

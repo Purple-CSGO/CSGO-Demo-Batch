@@ -100,7 +100,7 @@ const getMatchData = async (id) => {
   var url = ''
 
   const { HLTV } = require('hltv')
-  const resp = await HLTV.getMatch({id: id, delayBetweenPageRequests: 100 }).catch(err => {}) //console.log(id, '❌')
+  const resp = await HLTV.getMatch({id: id, delayBetweenPageRequests: 100 }).catch(err => {console.log(id, '❌', err)}) //console.log(id, '❌')
 
   if (resp === null||resp === undefined) return null
 
@@ -125,6 +125,7 @@ const getMatchData = async (id) => {
   return {data: match, raw: resp}
 }
 
+// 获取赛事数据
 const getEventData = async (id) => {
   const { HLTV } = require('hltv')
   const resp = await HLTV.getEvent({id: id}).catch(err => {}) //console.log(id, '❌')
@@ -140,9 +141,15 @@ const getEventData = async (id) => {
   return {data: event, raw: resp}
 }
 
+// 合并生成赛事-比赛列表数据
+const mergeEventMatchList = async () => {
+
+  return
+}
+
 module.exports= {
   sleep, map2file,
   readCFG, writeCFG,
   getDownloadUrl, parseDownloadUrl, parseFileName,
-  getMatchData, getEventData
+  getMatchData, getEventData, mergeEventMatchList
 }
