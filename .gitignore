@@ -9,6 +9,8 @@ matches/*
 matches_raw/*
 build/*
 dist/*
+ev/*
+ev_raw/*
 # config.json
 # cfg_match.json
 # cfg_event.json

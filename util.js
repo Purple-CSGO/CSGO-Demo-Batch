@@ -117,7 +117,10 @@ const getMatchData = async (id) => {
 
   // 获取下载链接和url
   if (url !== '') {
-    match.download_url = await getDownloadUrl(url)
+    match.download_url = await getDownloadUrl(url).catch(err => {console.log(match.id, '❌', err)})
+    if (match.download_url === null || match.download_url === undefined) {
+      match.download_url = match.filename = ""
+    }
     match.filename = parseFileName(match.download_url)
     match.download_id = Number(parseFileName(url))
   }

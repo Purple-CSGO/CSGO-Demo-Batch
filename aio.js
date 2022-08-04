@@ -7,7 +7,7 @@ const results = async () => {
   map2file(resp, ".", "results.json")
 }
 
-const eventMatchList = async () => {
+const eventMatchList = async (current = 74) => {
   // 读取所有events
   var files = fs.readdirSync("./events",{encoding:'utf8'})
 
@@ -16,6 +16,7 @@ const eventMatchList = async () => {
   var events_raw = []
   var i = 0
   for(var file of files) {
+    if(i++ < current) continue;
 
     // 遍历match_list获取match_list
     var f = fs.readFileSync("./events/"+file)
@@ -32,7 +33,7 @@ const eventMatchList = async () => {
           const resp = await getMatchData(res.id).catch(err => console.log('match', res.id, '❌', err))
 
           // 获取失败时处理
-          if (resp === null) {
+          if (resp === null || resp === undefined) {
             console.log('match', res.id, '❌')
             continue
           }
@@ -52,6 +53,8 @@ const eventMatchList = async () => {
     }
     
     console.log('events', dat.id, ++i, '/', files.length, '✔️')
+    map2file(events, "./ev", dat.id+".json")
+    map2file(events_raw, "./ev_raw", dat.id+"_raw.json")
   }
 
   // 保存文件
